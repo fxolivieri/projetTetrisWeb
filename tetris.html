@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>TETRIS OLIVIERI FX</title>
+  <meta charset="utf-8" />
   <link rel="stylesheet" href="styleTetris.css" />
   
 </head>
@@ -27,6 +28,14 @@
     
 	<script>
 
+	function get(id)
+	{
+		return document.getElementById(id);  
+	}
+	
+	
+	function random(min, max)      { return (min + (Math.random() * (max - min)));            }
+    function randomChoice(choices) { return choices[Math.round(random(0, choices.length-1))]; }
 	
 	//VARIABLES GLOBALES 
 	var temps; // temps d'une nouvelle partie
@@ -59,54 +68,48 @@
 	//Variables des pieces pour le jeu tetris 
     var p1 = 
 	{ 
-		taille: 2,
+		size: 2,
 		piece: [0xCC00, 0xCC00, 0xCC00, 0xCC00], 
-		color: 'magenta'};
-	}
+		color: 'magenta'
+	};
     var p2 = 
 	{ 
-		taille: 3, 
+		size: 3, 
 		piece: [0x4460, 0x0E80, 0xC440, 0x2E00], 
 		color: 'red' 
 	};
     var p3 = 
 	{ 
-		taille: 3, 
+		size: 3, 
 		piece: [0x44C0, 0x8E00, 0x6440, 0x0E20], 
 		color: 'blue'   
 	};
 	var p4 = 
 	{ 
-		taille: 3, 
+		size: 3, 
 		piece: [0x0E40, 0x4C40, 0x4E00, 0x4640], 
 		color: 'indigo' 
 	};
 	var p5 = 
 	{ 
-		taille: 3, 
+		size: 3, 
 		piece: [0x06C0, 0x8C40, 0x6C00, 0x4620], 
 		color: 'green'  
 	};
     var p6 = 
 	{ 
-		taille: 3, 
+		size: 3, 
 		piece: [0x0C60, 0x4C80, 0xC600, 0x2640], 
 		color: 'orange'
 	};
 	var p7 = 
 	{ 
-		taille: 4, 
+		size: 4, 
 		piece: [0x0F00, 0x2222, 0x00F0, 0x4444], 
 		color: 'pink'   
 	}; 
 	
-	var pieces = [];
-    function randomPiece() {
-      if (pieces.length == 0)
-        pieces = [p1,p1,p1,p1,p2,p2,p2,p2,p3,p3,p3,p3,p4,p4,p4,p4,p5,p5,p5,p5,p6,p6,p6,p6,p7,p7,p7,p7];
-      var type = pieces.splice(random(0, pieces.length-1), 1)[0];
-      return { type: type, pos: POSITIONS.HAUT, x: Math.round(random(0, largeurTetris - type.taille)), y: 0 };
-    }
+	
 
 	function invalide() //verifier si la piece courante est invalide 
 	{
@@ -118,13 +121,6 @@
 	}
 	
 	
-	function get(id)
-	{
-		return document.getElementById(id);  
-	}
-	
-	function random(min, max)      { return (min + (Math.random() * (max - min)));            }
-    function randomChoice(choices) { return choices[Math.round(random(0, choices.length-1))]; }
 	
     function naturePiece(type, px, py, pos, fn) 
 	{
@@ -148,18 +144,6 @@
 		}
     }
 
-    
-	
-	function dessinerPiece(ctx, type, x, y, pos) 
-	{ 
-      naturePiece(type, x, y, pos, function(x, y)  {
-		ctx.fillStyle = type.color;
-		ctx.fillRect(x*px, y*py, px, py);
-		ctx.strokeRect(x*px, y*py, px, py)
-      });
-    }
-	
-	
     function verifierPositionPiece(type, x, y, pos) 
 	{ 
       var verif = false
@@ -174,6 +158,16 @@
 	{
       return !verifierPositionPiece(type, x, y, pos);
     }
+	
+	var pieces = [];
+    function randomPiece() {
+      if (pieces.length == 0)
+        pieces = [p1,p1,p1,p1,p2,p2,p2,p2,p3,p3,p3,p3,p4,p4,p4,p4,p5,p5,p5,p5,p6,p6,p6,p6,p7,p7,p7,p7];
+      var type = pieces.splice(random(0, pieces.length-1), 1)[0];
+      return { type: type, pos: POSITIONS.HAUT, x: Math.round(random(0, largeurTetris - type.size)), y: 0 };
+    }
+	
+	
 	
 	function raffraichirFenetre() 
 	{
@@ -203,26 +197,13 @@
         }
 
 		
-        var padding = (grandeur - pieceSuiv.type.taille) / 2; 
+        var padding = (grandeur - pieceSuiv.type.size) / 2; 
         ctx2.clearRect(0, 0, grandeur*px, grandeur*py);
         dessinerPiece(ctx2, pieceSuiv.type, padding, padding, pieceSuiv.pos);
         
     }
 	
-	
-	
-	function initialiserPartie() 
-	{
-		temps = 0;
-		pieces = []; //effacer les pièces 
-		actions = []; //effacer les actions
-		rafraichirLignes(0);
-		modifierPieceCour(pieceSuiv);
-		modifierPieceSuiv();
-	}
-	
-	
-    function lancerPartie() 
+	 function run() 
 	{
 		window.addEventListener('redimensionner', redimensionner, false);
 		document.addEventListener('clavier', clavier, false);
@@ -233,7 +214,6 @@
 	}
 	
 	
-
     function redimensionner(e) 
 	{ 
       canvas.width   = canvas.clientWidth;  
@@ -245,7 +225,6 @@
     }
 	
 	
-
     function clavier(c)  //controle du clavier (fleches et boutons)
 	{
       var handled = false;
@@ -332,6 +311,7 @@
 		}
     }
 
+	
 	 
 	function jouer() //Debut d'une nouvelle partie
 	{ 
@@ -344,8 +324,32 @@
 	etatPartie = false;
 	}
 
+	
+	function dessinerPiece(ctx, type, x, y, pos) 
+	{ 
+      naturePiece(type, x, y, pos, function(x, y)  {
+		ctx.fillStyle = type.color;
+		ctx.fillRect(x*px, y*py, px, py);
+		ctx.strokeRect(x*px, y*py, px, py)
+      });
+    }
+	
+	
     
-    function obtenirPiece(x,y) 
+	
+	function initialiserPartie() 
+	{
+		temps = 0;
+		pieces = []; //effacer les pièces 
+		actions = []; //effacer les actions
+		rafraichirLignes(0);
+		modifierPieceCour(pieceSuiv);
+		modifierPieceSuiv();
+	}
+	
+	
+    
+	function obtenirPiece(x,y) 
 	{
 		return (piece && piece[x] ? piece[x][y] : null); 
 	}
@@ -414,11 +418,13 @@
 	
 	function modifierLigne(ligne) 
 	{ 
-      for(var dy = ligne ; dy >= 0 ; --dy) 
+		var x;
+		var y;
+		for(y = ligne ; y >= 0 ; --y) 
 	  {
-        for(var dx = 0 ; dx < largeurTetris ; ++dx)
+        for(x = 0 ; x < largeurTetris ; ++x)
 		{
-          modifierPiece(dx, dy, (dy == 0) ? null : obtenirPiece(dx, dy-1));
+          modifierPiece(x, y, (y == 0) ? null : obtenirPiece(x, y-1));
 		}
       }
     }
@@ -444,22 +450,22 @@
 
 	function modifierLignes()  //permet de renouveler le graphique en fonction de la ligne pleine 
 	{
-		var dx;
-		var dy;
+		var x;
+		var y;
 		var lignePleine;
 		var l = 0;
-		for(dy = hauteurTetris ; dy > 0 ; --dy) 
+		for(y = hauteurTetris ; y > 0 ; --y) 
 		{
 			lignePleine = true;
-			for(dx = 0 ; dx < largeurTetris ; ++dx) 
+			for(x = 0 ; x < largeurTetris ; ++x) 
 			{
-				if (!obtenirPiece(dx, dy))
+				if (!obtenirPiece(x, y))
 					lignePleine = false;
 			}
 				if (lignePleine) 
 				{
-					modifierLigne(dy);
-					dy = dy + 1; 
+					modifierLigne(y);
+					y = y + 1; 
 					l++;
 				}
 		}
@@ -467,7 +473,7 @@
 			ajouterLigne(n);
     }
 
-	lancerPartie();
+	run();
 	</script>
 </body>
 </html>
