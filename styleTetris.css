@@ -1,0 +1,75 @@
+body
+{
+background-image:url(fond.jpg);
+
+}
+
+#cadre 
+{
+position: absolute;
+top : 20%;
+left : -58%;
+display: block; 
+width: 430px; 
+height: 190px;  
+border-radius: 7px;
+background-color:#484848;
+border: 4px solid #303030;
+}
+
+#text1
+{
+position: absolute;
+top : 20%;
+left : -57%;
+color : #32CD32;
+}
+
+#text2
+{
+position: absolute;
+top : 25%;
+left : -57%;
+color : #32CD32;
+}
+
+#text3
+{
+position: absolute;
+top : 30%;
+left : -57%;
+color : #32CD32;
+}
+
+#fenetrePrincipale { 
+position: absolute;
+top : 0%;
+left : 40%;
+width: 900px; 
+} 
+
+#canvas   { 
+display: inline-block; 
+width: 400px; 
+height: 800px; 
+background-color:#484848;
+border-radius:7px;
+border: 4px solid #303030; 
+}
+
+
+
+#objetSuivant 
+{ 
+position: absolute;
+top : 40%;
+right : 20%;
+display: block; 
+width: 230px; 
+height: 180px;  
+border:4px solid #303030;
+border-radius:7px; 
+background-color:#484848; 
+}
+
+
